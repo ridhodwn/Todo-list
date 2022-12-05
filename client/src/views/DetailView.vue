@@ -19,7 +19,8 @@ export default {
             name: '',
             priority: '1',
             priorityName: 'Very High',
-            imageSource: ellipse445
+            imageSource: ellipse445,
+            checkedTF: 'T'
         }
     },
     methods: {
@@ -32,7 +33,7 @@ export default {
         },
         createTodoItemComponent() {
             this.createTodoItem(this.$route.params.id, {
-                name: this.priority+this.name
+                name: this.priority+this.name+this.checkedTF
             })
         },
         toDashboardPage() {
@@ -72,7 +73,43 @@ export default {
         }
     },
     computed: {
-        ...mapWritableState(useTodoStore, ['activity', 'todoItems'])
+        ...mapWritableState(useTodoStore, ['activity', 'todoItems']),
+        sortedAZ: function() {
+            function compare(a, b) {
+                if (a.title.split('').slice(1).join('') < b.title.split('').slice(1).join(''))
+                    return -1;
+                if (a.title.split('').slice(1).join('') > b.title.split('').slice(1).join(''))
+                    return 1;
+                return 0;
+            }
+
+            return this.todoItems.sort(compare);
+        },
+        sortedZA: function() {
+            function compare(a, b) {
+                if (a.title.split('').slice(1).join('') < b.title.split('').slice(1).join(''))
+                    return 1;
+                if (a.title.split('').slice(1).join('') > b.title.split('').slice(1).join(''))
+                    return -1;
+                return 0;
+            }
+
+            return this.todoItems.sort(compare);
+        },
+        sortedOld: function() {
+            function compare(a, b) {
+                return a.id - b.id;
+            }
+
+            return this.todoItems.sort(compare);
+        },
+        sortedNew: function() {
+            function compare(a, b) {
+                return b.id - a.id;
+            }
+
+            return this.todoItems.sort(compare);
+        },
     },
     created() {
         this.fetchActivityById(this.$route.params.id),
@@ -102,7 +139,35 @@ export default {
             </a>
         </div>
         <div v-if="todoItems">
-            <img src="../assets/todo-sort-button.png" id="todo-sort-button">
+            <div class="dropdown">
+                <button class="btn border-0 rounded-circle p-0 d-flex align-items-center"
+                    type="button" id="dropdownSortButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <img src="../assets/todo-sort-button.png" id="todo-sort-button">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSortButton" id="dropdown-menu-sort">
+                    <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedNew">
+                        <img src="../assets/sort-latest.png" id="dd-item" class="me-3" />Terbaru
+                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                    </li>
+                    <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedOld">
+                        <img src="../assets/sort-oldest.png" id="dd-item" class="me-3" />Terlama
+                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                    </li>
+                    <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedAZ">
+                        <img src="../assets/sort-az.png" id="dd-item" class="me-3" />A-Z
+                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                    </li>
+                    <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedZA">
+                        <img src="../assets/sort-za.png" id="dd-item" class="me-3" />Z-A
+                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                    </li>
+                    <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedNotFinished">
+                        <img src="../assets/sort-unfinished.png" id="dd-item" class="me-3" />Belum Selesai
+                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-3"/>
+                    </li>
+                </ul>
+            </div>
         </div>
         <button type="button" data-cy="todo-add-button" id="todo-add-button" data-bs-toggle="modal"
             data-bs-target="#addModal">
@@ -137,26 +202,26 @@ export default {
                             <label class="col-form-label" id="modal-add-priority-title">PRIORITY</label>
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle border d-flex align-items-center pb-2"
-                                    type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    type="button" id="dropdownPriorityButton" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <img :src="imageSource" id="ellipses" class="me-3" />
+                                    <img :src="imageSource" id="dd-item" class="me-3" />
                                     <div class="me-4">{{ priorityName }}</div>
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <ul class="dropdown-menu" aria-labelledby="dropdownPriorityButton">
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('1')">
-                                        <img src="../assets/elipse-445.png" id="ellipses" class="me-3" />Very High
+                                        <img src="../assets/elipse-445.png" id="dd-item" class="me-3" />Very High
                                     </li>
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('2')">
-                                        <img src="../assets/elipse-446.png" id="ellipses" class="me-3" />High
+                                        <img src="../assets/elipse-446.png" id="dd-item" class="me-3" />High
                                     </li>
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('3')">
-                                        <img src="../assets/elipse-447.png" id="ellipses" class="me-3" />Medium
+                                        <img src="../assets/elipse-447.png" id="dd-item" class="me-3" />Medium
                                     </li>
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('4')">
-                                        <img src="../assets/elipse-448.png" id="ellipses" class="me-3" />Low
+                                        <img src="../assets/elipse-448.png" id="dd-item" class="me-3" />Low
                                     </li>
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('5')">
-                                        <img src="../assets/elipse-449.png" id="ellipses" class="me-3" />Very Low
+                                        <img src="../assets/elipse-449.png" id="dd-item" class="me-3" />Very Low
                                     </li>
                                 </ul>
                             </div>
@@ -215,12 +280,21 @@ export default {
     background-color: #F4F4F4;
 }
 
-#todo-sort-button {
+#dropdownSortButton {
     position: absolute;
     width: 54px;
     height: 54px;
     left: 910px;
     top: 150px;
+}
+
+#todo-sort-button {
+    width: 54px;
+    height: 54px;
+}
+
+#dropdown-menu-sort {
+    width: 15%
 }
 
 #todo-add-button {
@@ -273,12 +347,12 @@ export default {
     color: #111111;
 }
 
-#ellipses {
+#dd-item {
     width: 14px;
     height: 14px;
 }
 
-#dropdownMenuButton {
+#dropdownPriorityButton {
     width: 22%;
 }
 .dropdown-menu {

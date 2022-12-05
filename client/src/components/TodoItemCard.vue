@@ -15,57 +15,104 @@ export default {
     data() {
         return {
             imageSource: ellipse445,
-            name1: this.todoItem.title.split('').slice(1).join(''),
+            imageSourceM: ellipse445,
+            name: '',
             priority: this.todoItem.title.split('')[0],
-            priorityName: 'Very High'
+            priorityNameM: 'Very High',
+            checked: (this.todoItem.title.split('')[this.todoItem.title.length - 1] === 'T') ? false : true,
+            checkedTF: this.todoItem.title.split('')[this.todoItem.title.length - 1]
         }
     },
     methods: {
         ...mapActions(useTodoStore, ['deleteTodoItem', 'updateTodoItem']),
         updateTodoItemComponent() {
-            this.updateTodoItem(this.$route.params.id, {
-                name: this.priority+this.name
-            })
+            this.updateTodoItem(this.todoItem.id, {
+                name: this.priority+this.name+this.checkedTF
+            }, this.$route.params.id)
         },
-        showEditModal() {
-            console.log('show Edit Modal')
-            console.log(this.name1)
-            this.name1 = this.todoItem.title.split('').slice(1).join('')
-            console.log(this.name1)
+        checkedTodoItemComponent() {
+            console.log(this.checked, 'in Click Method')
+            if (this.checked) {
+                this.checkedTF = 'T'
+            } else {
+                this.checkedTF = 'F'
+            }
+
+            this.checkedCase;
+            // console.log(this.checkedCase)
+
+            this.priority = this.todoItem.title.split('')[0];
+            this.name = this.todoItem.title.split('').slice(1, -1).join('');
+            this.updateTodoItem(this.todoItem.id, {
+                name: this.priority+this.name+this.checkedTF
+            }, this.$route.params.id)
+        },
+        getSelected(item) {
+            this.priority = item;
+            this.name = this.todoItem.title.split('').slice(1).join('');
+
+            switch(item) {
+                case '1':
+                    this.priorityNameM = 'Very High'
+                    this.imageSourceM = ellipse445
+                    break;
+                case '2':
+                    this.priorityNameM = 'High'
+                    this.imageSourceM = ellipse446
+                    break;
+                case '3':
+                    this.priorityNameM = 'Medium'
+                    this.imageSourceM = ellipse447
+                    break;
+                case '4':
+                    this.priorityNameM = 'Low'
+                    this.imageSourceM = ellipse448
+                    break;
+                case '5':
+                    this.priorityNameM = 'Very Low'
+                    this.imageSourceM = ellipse449
+                    break;
+                default:
+                    break;
+                }
         }
     },
     computed: {
         ellipsesCase() {
-            let obj = {};
             switch (this.todoItem.title.split('')[0]) {
                 case '1':
-                    this.priorityName = 'Very High'
                     this.imageSource = ellipse445
                     break;
                 case '2':
-                    this.priorityName = 'High'
                     this.imageSource = ellipse446
                     break;
                 case '3':
-                    this.priorityName = 'Medium'
                     this.imageSource = ellipse447
                     break;
                 case '4':
-                    this.priorityName = 'Low'
                     this.imageSource = ellipse448
                     break;
                 case '5':
-                    this.priorityName = 'Very Low'
                     this.imageSource = ellipse449
                     break;
                 default:
                     break;
             }
 
-            obj.imageSource = this.imageSource;
-            obj.priorityName = this.priorityName;
-
-            return obj
+            return this.imageSource
+        },
+        checkedCase() {
+            console.log(this.checked, '<< in Checked Case')
+            console.log(this.todoItem.title.split('')[this.todoItem.title.length - 1], '<< in Checked Case Split')
+            console.log(this.checkedTF, '<< in Checked Case TF')
+            if (this.todoItem.title.split('')[this.todoItem.title.length - 1] === 'T' || this.checkedTF === 'T') {
+                console.log('T', '<< First If')
+                // this.checked = false
+                return true
+            } else {
+                // this.checked = true
+                return false
+            }
         }
     }
 }
@@ -76,12 +123,15 @@ export default {
         <div class="card p-4 border-0" id="todo-item">
             <div class="d-flex justify-content-between">
                 <div class="form-check form-check-inline d-flex align-items-center">
-                    <input class="form-check-input me-4" type="checkbox" id="todo-item-checkbox" value="option1">
-                    <img :src="ellipsesCase.imageSource" id="ellipses" class="me-4 align-self-center mb-0 mt-1" />
-                    <h5 class="align-self-center mb-0 me-4" data-cy="todo-item-title">{{
-                            todoItem.title.split('').slice(1).join('')
+                    <input class="form-check-input me-4" type="checkbox" id="todo-item-checkbox" v-model="checked" @click="checkedTodoItemComponent">
+                    <img :src="ellipsesCase" id="ellipses" class="me-4 align-self-center mb-0 mt-1" />
+                    <del v-if="!checkedCase" id="checked-title"><h5 class="align-self-center mb-0 me-4" data-cy="todo-item-title" >
+                        {{ todoItem.title.split('').slice(1, -1).join('') }}</h5>
+                    </del>
+                    <h5 v-else class="align-self-center mb-0 me-4" data-cy="todo-item-title">{{
+                            todoItem.title.split('').slice(1, -1).join('')
                     }}</h5>
-                    <a @click.prevent="showEditModal" data-bs-toggle="modal" :data-bs-target="`#editModal${todoItem.id}`" href="#">
+                    <a @click.prevent="getSelected(this.todoItem.title.split('')[0])" data-bs-toggle="modal" :data-bs-target="`#editModal${todoItem.id}`" href="#">
                         <img src="../assets/todo-item-edit-button.png" id="todo-item-edit-button" class="">
                     </a>
                 </div>
@@ -105,7 +155,7 @@ export default {
                     <div class="modal-body">  
                         <div class="mb-3">
                             <label class="col-form-label" id="modal-edit-name-title">NAMA LIST ITEM</label>
-                            <input v-model="name1" type="text" class="form-control p-2">
+                            <input v-model="name" type="text" class="form-control p-2">
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" id="modal-edit-priority-title">PRIORITY</label>
@@ -113,8 +163,8 @@ export default {
                                 <button class="btn btn-default dropdown-toggle border d-flex align-items-center pb-2"
                                     type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <img :src="ellipsesCase.imageSource" id="ellipses" class="me-3" />
-                                    <div class="me-4">{{ ellipsesCase.priorityName }}</div>
+                                    <img :src="imageSourceM" id="ellipses" class="me-3" />
+                                    <div class="me-4">{{ priorityNameM }}</div>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="getSelected('1')">
@@ -208,5 +258,9 @@ export default {
     color: #FFFFFF;
     margin-top: 5px;
     align-self: center;
+}
+
+#checked-title {
+    color: #888888
 }
 </style>
