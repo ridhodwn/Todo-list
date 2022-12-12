@@ -4,7 +4,7 @@ export const useTodoStore = defineStore('todo', {
     state: () => ({
         activities: {},
         activity: '',
-        todoItems: {},
+        todoItems: [],
         todoItem: {},
         baseUrl: "https://todo.api.devcode.gethired.id"
     }),
@@ -166,24 +166,6 @@ export const useTodoStore = defineStore('todo', {
             } catch (error) {
                 console.log(error);
             }
-        },
-        // async checkedTodoItem(id, value, activityId) {
-        //     try {
-        //         console.log('in Checked Todo Item');
-        //         console.log(value)
-        //         const data = await axios({
-        //             method: 'patch',
-        //             url: this.baseUrl + `/todo-items/${id}`,
-        //             data: {
-        //                 "title": value.name
-        //             }
-        //         });
-        //         this.todoItem = data;
-        //         this.fetchTodoItems(activityId);
-        //         console.log(this.todoItem);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
+        }
     }
 })

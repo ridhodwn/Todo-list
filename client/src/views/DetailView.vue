@@ -20,7 +20,12 @@ export default {
             priority: '1',
             priorityName: 'Very High',
             imageSource: ellipse445,
-            checkedTF: 'T'
+            checkedTF: 'T',
+            checkedSN: true,
+            checkedSO: false,
+            checkedSAZ: false,
+            checkedSZA: false,
+            checkedSBS: false
         }
     },
     methods: {
@@ -42,6 +47,10 @@ export default {
         changeToInput() {
             this.clicked = true;
             this.title = this.activity.data.title;
+        },
+        updateparent(variable) {
+            this.checkedSN = variable
+            this.checkedSAZ = this.checkedSO = this.checkedSZA = this.checkedSBS = false
         },
         getSelected(item) {
             this.priority = item;
@@ -75,6 +84,8 @@ export default {
     computed: {
         ...mapWritableState(useTodoStore, ['activity', 'todoItems']),
         sortedAZ: function() {
+            this.checkedSAZ = true
+            this.checkedSN = this.checkedSO = this.checkedSZA = this.checkedSBS = false
             function compare(a, b) {
                 if (a.title.split('').slice(1).join('') < b.title.split('').slice(1).join(''))
                     return -1;
@@ -86,6 +97,8 @@ export default {
             return this.todoItems.sort(compare);
         },
         sortedZA: function() {
+            this.checkedSZA = true
+            this.checkedSN = this.checkedSO = this.checkedSAZ = this.checkedSBS = false
             function compare(a, b) {
                 if (a.title.split('').slice(1).join('') < b.title.split('').slice(1).join(''))
                     return 1;
@@ -97,6 +110,8 @@ export default {
             return this.todoItems.sort(compare);
         },
         sortedOld: function() {
+            this.checkedSO = true
+            this.checkedSN = this.checkedSAZ = this.checkedSZA = this.checkedSBS = false
             function compare(a, b) {
                 return a.id - b.id;
             }
@@ -104,12 +119,27 @@ export default {
             return this.todoItems.sort(compare);
         },
         sortedNew: function() {
+            this.checkedSN = true
+            this.checkedSAZ = this.checkedSO = this.checkedSZA = this.checkedSBS = false
             function compare(a, b) {
                 return b.id - a.id;
             }
 
             return this.todoItems.sort(compare);
         },
+        sortedNotFinished: function() {
+            this.checkedSBS = true
+            this.checkedSN = this.checkedSO = this.checkedSZA = this.checkedSAZ = false
+            function compare(a, b) {
+                if (a.title.split('').slice(-1) < b.title.split('').slice(-1))
+                    return 1;
+                if (a.title.split('').slice(-1) > b.title.split('').slice(-1))
+                    return -1;
+                return 0;
+            }
+
+            return this.todoItems.sort(compare)
+        }
     },
     created() {
         this.fetchActivityById(this.$route.params.id),
@@ -148,23 +178,23 @@ export default {
                 <ul class="dropdown-menu" aria-labelledby="dropdownSortButton" id="dropdown-menu-sort">
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedNew">
                         <img src="../assets/sort-latest.png" id="dd-item" class="me-3" />Terbaru
-                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                        <img v-if="checkedSN" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
                     </li>
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedOld">
                         <img src="../assets/sort-oldest.png" id="dd-item" class="me-3" />Terlama
-                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                        <img v-if="checkedSO" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
                     </li>
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedAZ">
                         <img src="../assets/sort-az.png" id="dd-item" class="me-3" />A-Z
-                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                        <img v-if="checkedSAZ" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
                     </li>
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedZA">
                         <img src="../assets/sort-za.png" id="dd-item" class="me-3" />Z-A
-                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
+                        <img v-if="checkedSZA" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
                     </li>
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedNotFinished">
                         <img src="../assets/sort-unfinished.png" id="dd-item" class="me-3" />Belum Selesai
-                        <img src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-3"/>
+                        <img v-if="checkedSBS" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-3"/>
                     </li>
                 </ul>
             </div>
@@ -180,7 +210,7 @@ export default {
     </div>
     <div v-else id="cards-container">
         <div class="row gx-2 gy-3" id="cards" data-cy="todo-item">
-            <TodoItemCard v-for="todoItem in todoItems" :key="todoItems.id" :todoItem="todoItem" :activityId="this.$route.params.id"/>
+            <TodoItemCard v-for="todoItem in todoItems" :key="todoItem.id" :todoItem="todoItem" :activityId="this.$route.params.id" @eventname="updateparent"/>
         </div>
     </div>
     

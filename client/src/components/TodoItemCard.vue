@@ -12,6 +12,7 @@ export default {
         todoItem: Object,
         activityId: String
     },
+    emits: ['eventname'],
     data() {
         return {
             imageSource: ellipse445,
@@ -20,7 +21,8 @@ export default {
             priority: this.todoItem.title.split('')[0],
             priorityNameM: 'Very High',
             checked: (this.todoItem.title.split('')[this.todoItem.title.length - 1] === 'T') ? false : true,
-            checkedTF: this.todoItem.title.split('')[this.todoItem.title.length - 1]
+            checkedTF: this.todoItem.title.split('')[this.todoItem.title.length - 1],
+            variable: true
         }
     },
     methods: {
@@ -32,6 +34,7 @@ export default {
         },
         checkedTodoItemComponent() {
             console.log(this.checked, 'in Click Method')
+            this.$emit('eventname', this.variable);
             if (this.checked) {
                 this.checkedTF = 'T'
             } else {
@@ -107,10 +110,8 @@ export default {
             console.log(this.checkedTF, '<< in Checked Case TF')
             if (this.todoItem.title.split('')[this.todoItem.title.length - 1] === 'T' || this.checkedTF === 'T') {
                 console.log('T', '<< First If')
-                // this.checked = false
                 return true
             } else {
-                // this.checked = true
                 return false
             }
         }
