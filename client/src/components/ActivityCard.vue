@@ -27,7 +27,7 @@ export default {
                         year: "numeric", month: "long"
                     })
                 }}</p>
-                <a data-bs-toggle="modal" :data-bs-target="`#deleteModal${activity.id}`" href="#" data-cy="activity-item-delete-button">
+                <a data-bs-toggle="modal" :data-bs-target="`#deleteModal${activity.id}`" href="#">
                     <img src="../assets/tabler-trash.png" id="tabler-trash" class="col-2 ms-2 mb-0">
                 </a>
             </div>
@@ -35,7 +35,7 @@ export default {
     </div>
 
     <!-- Modal Delete -->
-    <div class="modal fade" :id="`deleteModal${activity.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-cy="modal-delete">
+    <div class="modal fade" :id="`deleteModal${activity.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content py-2 px-4">
                 <div class="modal-body ">
@@ -47,7 +47,7 @@ export default {
                         <b> "{{ activity.title }}"? </b></p>
                     </div>
                     <div class="mb-3 d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary border-0 me-3" id="modal-delete-cancel-button" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-primary border-0 me-3" id="modal-delete-cancel-button" data-bs-dismiss="modal" data-cy=modal-delete-cancel-button>
                             <h6 data-cy="Batal" id="Batal">Batal</h6>
                         </button>
                         <button type="button" class="btn btn-danger border-0" id="modal-delete-confirm-button" data-bs-dismiss="modal" @click.prevent="deleteActivity(activity.id, activity.title)" data-bs-target="#informationModal" data-bs-toggle="modal">
@@ -60,7 +60,7 @@ export default {
     </div>
 
     <!-- Modal Information -->
-    <div class="modal fade" id="informationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="informationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-cy=modal-information>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body mx-3 py-1">

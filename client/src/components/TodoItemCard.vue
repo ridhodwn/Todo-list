@@ -124,7 +124,7 @@ export default {
         <div class="card p-4 border-0" id="todo-item">
             <div class="d-flex justify-content-between">
                 <div class="form-check form-check-inline d-flex align-items-center">
-                    <input class="form-check-input me-4" type="checkbox" id="todo-item-checkbox" v-model="checked" @click="checkedTodoItemComponent">
+                    <input class="form-check-input me-4" type="checkbox" id="todo-item-checkbox" v-model="checked" @click="checkedTodoItemComponent" data-cy="todo-item-checkbox">
                     <img :src="ellipsesCase" id="ellipses" class="me-4 align-self-center mb-0 mt-1" />
                     <del v-if="!checkedCase" id="checked-title"><h5 class="align-self-center mb-0 me-4" data-cy="todo-item-title" >
                         {{ todoItem.title.split('').slice(1, -1).join('') }}</h5>
@@ -213,7 +213,7 @@ export default {
                         <button type="button" class="btn btn-primary border-0 me-3" id="modal-delete-cancel-button" data-bs-dismiss="modal">
                             <h6 data-cy="Batal" id="Batal">Batal</h6>
                         </button>
-                        <button type="button" class="btn btn-danger border-0" id="modal-delete-confirm-button" data-bs-dismiss="modal" @click.prevent="deleteTodoItem(todoItem.id, todoItem.title, +activityId)" data-bs-target="#informationModal" data-bs-toggle="modal">
+                        <button type="button" class="btn btn-danger border-0" id="modal-delete-confirm-button" data-bs-dismiss="modal" @click.prevent="deleteTodoItem(todoItem.id, todoItem.title, +activityId)" data-bs-target="#informationModal" data-bs-toggle="modal" data-cy="modal-delete-confirm-button">
                             <h6 data-cy="Hapus" id="Hapus">Hapus</h6>
                         </button>
                     </div>

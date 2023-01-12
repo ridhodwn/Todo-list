@@ -169,13 +169,13 @@ export default {
             </a>
         </div>
         <div v-if="todoItems">
-            <div class="dropdown">
+            <div class="dropdown" data-cy="todo-sort-button">
                 <button class="btn border-0 rounded-circle p-0 d-flex align-items-center"
                     type="button" id="dropdownSortButton" data-bs-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     <img src="../assets/todo-sort-button.png" id="todo-sort-button">
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownSortButton" id="dropdown-menu-sort">
+                <ul class="dropdown-menu" aria-labelledby="dropdownSortButton" id="dropdown-menu-sort" data-cy="sort-selection">
                     <li class="dropdown-item d-flex align-items-center pb-2" @click.prevent="sortedNew">
                         <img src="../assets/sort-latest.png" id="dd-item" class="me-3" />Terbaru
                         <img v-if="checkedSN" src="../assets/checked-sort.png" id="dd-item" class="mt-1 ms-5"/>
@@ -199,8 +199,8 @@ export default {
                 </ul>
             </div>
         </div>
-        <button type="button" data-cy="todo-add-button" id="todo-add-button" data-bs-toggle="modal"
-            data-bs-target="#addModal">
+        <button type="button" id="todo-add-button" data-bs-toggle="modal"
+            data-bs-target="#addModal" data-cy="todo-add-button">
             <img src="../assets/tabler-plus.png" id="tabler-plus">
             <h6 data-cy="Tambah" id="Tambah">Tambah</h6>
         </button>
@@ -208,7 +208,7 @@ export default {
     <div v-if="!todoItems[0]">
         <img src="../assets/todo-empty-state.png" id="todo-empty-state">
     </div>
-    <div v-else id="cards-container">
+    <div v-else id="cards-container" data-cy="todo-empty-state">
         <div class="row gx-2 gy-3" id="cards" data-cy="todo-item">
             <TodoItemCard v-for="todoItem in todoItems" :key="todoItem.id" :todoItem="todoItem" :activityId="this.$route.params.id" @eventname="updateparent"/>
         </div>
@@ -226,11 +226,11 @@ export default {
                     <div class="modal-body">  
                         <div class="mb-3">
                             <label class="col-form-label" id="modal-add-name-title">NAMA LIST ITEM</label>
-                            <input v-model="name" type="text" class="form-control p-2" placeholder="Tambahkan nama Activity">
+                            <input v-model="name" type="text" class="form-control p-2" placeholder="Tambahkan nama Activity" data-cy="modal-add-name-input">
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" id="modal-add-priority-title">PRIORITY</label>
-                            <div class="dropdown">
+                            <div class="dropdown" data-cy="modal-add-priority-dropdown">
                                 <button class="btn btn-default dropdown-toggle border d-flex align-items-center pb-2"
                                     type="button" id="dropdownPriorityButton" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -258,8 +258,8 @@ export default {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="modal-add-save-button" data-bs-dismiss="modal">
-                            <h6 data-cy="Simpan" id="Simpan">Simpan</h6>
+                        <button type="submit" class="btn btn-primary" id="modal-add-save-button" data-bs-dismiss="modal" data-cy="modal-add-save-button">
+                            <h6 id="Simpan">Simpan</h6>
                         </button>
                     </div>
                 </form>
