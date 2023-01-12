@@ -2,11 +2,12 @@ import { defineStore } from 'pinia'
 
 export const useTodoStore = defineStore('todo', {
     state: () => ({
-        activities: {},
+        activities: [],
         activity: '',
         todoItems: [],
         todoItem: {},
-        baseUrl: "https://todo.api.devcode.gethired.id"
+        baseUrl: "https://todo.api.devcode.gethired.id",
+        todoActivity: []
     }),
     actions: {
         async createActivity() {
@@ -39,31 +40,16 @@ export const useTodoStore = defineStore('todo', {
                 console.log(error);
             }
         },
-        deleteActivity(id, title) {
-            console.log('in Delete Activity');
-            Swal.fire({
-                text: `Apakah anda yakin menghapus activity "${title}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#888888',
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios({
-                        method: 'delete',
-                        url: this.baseUrl + `/activity-groups/${id}`
-                    }).then(() => {
-                        this.fetchActivities();
-                        Swal.fire({
-                            icon: 'info',
-                            text: 'Activity berhasil dihapus',
-                            showConfirmButton: false
-                        })
-                    });
-                }
-            });
+        async deleteActivity(id, title) {
+            try {
+               await axios({
+                    method: 'delete',
+                    url: this.baseUrl + `/activity-groups/${id}`
+                })
+                this.fetchActivities();
+            } catch (error) {
+                console.log(error);
+            }
         },
         async fetchActivityById(id) {
             try {
@@ -123,31 +109,16 @@ export const useTodoStore = defineStore('todo', {
                 console.log(error);
             }
         },
-        deleteTodoItem(id, title, activityId) {
-            console.log('in Delete Todo Item');
-            Swal.fire({
-                text: `Apakah anda yakin menghapus activity "${title}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#888888',
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios({
-                        method: 'delete',
-                        url: this.baseUrl + `/todo-items/${id}`
-                    }).then(() => {
-                        this.fetchTodoItems(activityId);
-                        Swal.fire({
-                            icon: 'info',
-                            text: 'Activity berhasil dihapus',
-                            showConfirmButton: false
-                        })
-                    });
-                }
-            });
+        async deleteTodoItem(id, title, activityId) {
+            try {
+                await axios({
+                    method: 'delete',
+                    url: this.baseUrl + `/todo-items/${id}`
+                })
+                this.fetchTodoItems(activityId);
+            } catch (error) {
+                console.log(error);
+            }
         },
         async updateTodoItem(id, value, activityId) {
             try {

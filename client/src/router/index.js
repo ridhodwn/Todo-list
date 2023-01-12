@@ -16,6 +16,6 @@ const router = createRouter({
       component: DetailView
     }
   ]
-})
+});
 
-export default router
+export default router;

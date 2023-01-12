@@ -11,13 +11,5 @@ export default {
 
 <template>
   <Navbar />
-
-  <!-- <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div> -->
-
   <RouterView />
 </template>

@@ -205,7 +205,7 @@ export default {
             <h6 data-cy="Tambah" id="Tambah">Tambah</h6>
         </button>
     </div>
-    <div v-if="!todoItems">
+    <div v-if="!todoItems[0]">
         <img src="../assets/todo-empty-state.png" id="todo-empty-state">
     </div>
     <div v-else id="cards-container">
@@ -215,7 +215,7 @@ export default {
     </div>
     
     <!-- Modal -->
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-cy="modal-add">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-2">
                 <div class="modal-header">

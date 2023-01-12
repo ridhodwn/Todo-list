@@ -27,7 +27,7 @@ export default {
             <h6 data-cy="Tambah" id="Tambah">Tambah</h6>
         </button>
     </div>
-    <div v-if="!activities">
+    <div v-if="!activities[0]">
         <img src="../assets/activity-empty-state.png" id="activity-empty-state">
     </div>
     <div v-else id="cards-container">
